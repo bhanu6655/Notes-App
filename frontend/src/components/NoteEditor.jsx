@@ -13,16 +13,15 @@ function readTime(words) {
 }
 
 export default function NoteEditor({ note, onSave, saving }) {
-  const [title,   setTitle]   = useState('');
-  const [content, setContent] = useState('');
-  const [tags,    setTags]    = useState([]);
+  const [title,    setTitle]    = useState('');
+  const [content,  setContent]  = useState('');
+  const [tags,     setTags]     = useState([]);
   const [tagInput, setTagInput] = useState('');
-  const [view, setView] = useState('split'); // 'editor' | 'split' | 'preview'
-  const [dirty, setDirty] = useState(false);
+  const [view,     setView]     = useState('split');
+  const [dirty,    setDirty]    = useState(false);
 
   const textareaRef = useRef(null);
 
-  // Load note into local state when selection changes
   useEffect(() => {
     if (note) {
       setTitle(note.title);
@@ -32,7 +31,6 @@ export default function NoteEditor({ note, onSave, saving }) {
     }
   }, [note?.id]);
 
-  // Debounced auto-save — fires 800ms after the user stops typing
   const debouncedContent = useDebounce(content, 800);
   const debouncedTitle   = useDebounce(title,   800);
 
@@ -41,7 +39,7 @@ export default function NoteEditor({ note, onSave, saving }) {
     onSave({ title: debouncedTitle, content: debouncedContent, tags });
   }, [debouncedTitle, debouncedContent]);
 
-  const handleTitleChange = (e) => { setTitle(e.target.value); setDirty(true); };
+  const handleTitleChange   = (e) => { setTitle(e.target.value);   setDirty(true); };
   const handleContentChange = (e) => { setContent(e.target.value); setDirty(true); };
 
   const addTag = useCallback(() => {
@@ -60,7 +58,6 @@ export default function NoteEditor({ note, onSave, saving }) {
     onSave({ title, content, tags: next });
   };
 
-  // Tab → insert 2 spaces in textarea
   const handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -91,7 +88,6 @@ export default function NoteEditor({ note, onSave, saving }) {
 
   return (
     <div className="note-editor">
-      {/* ── Title bar ──────────────────────────────────────────────── */}
       <div className="editor-titlebar">
         <input
           id="note-title-input"
@@ -106,7 +102,6 @@ export default function NoteEditor({ note, onSave, saving }) {
           {saving && <span className="saving-badge">Saving…</span>}
           {!saving && dirty === false && <span className="saved-badge">✓ Saved</span>}
 
-          {/* View mode toggle */}
           <div className="view-toggle" role="group" aria-label="View mode">
             <button
               id="view-editor-btn"
@@ -146,7 +141,6 @@ export default function NoteEditor({ note, onSave, saving }) {
         </div>
       </div>
 
-      {/* ── Stats bar ──────────────────────────────────────────────── */}
       <div className="stats-bar">
         <span>{words} words</span>
         <span>·</span>
@@ -155,7 +149,6 @@ export default function NoteEditor({ note, onSave, saving }) {
         <span>{content.length} chars</span>
       </div>
 
-      {/* ── Tags ───────────────────────────────────────────────────── */}
       <div className="tags-bar">
         <Tag size={12} opacity={0.5} />
         {tags.map((tag) => (
@@ -183,7 +176,6 @@ export default function NoteEditor({ note, onSave, saving }) {
         />
       </div>
 
-      {/* ── Split pane ─────────────────────────────────────────────── */}
       <div className={`editor-split view-${view}`}>
         {view !== 'preview' && (
           <div className="editor-pane">

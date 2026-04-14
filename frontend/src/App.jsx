@@ -18,20 +18,17 @@ export default function App() {
 
   const debouncedSearch = useDebounce(search, 350);
 
-  // Apply theme class to root
   useEffect(() => {
     document.documentElement.dataset.theme = darkMode ? 'dark' : 'light';
     localStorage.setItem('theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  // Fetch notes (re-runs on search change)
   const fetchNotes = useCallback(async () => {
     setLoading(true);
     try {
       const params = debouncedSearch ? { q: debouncedSearch } : {};
       const { data } = await getNotes(params);
       setNotes(data.data);
-      // Keep active note in sync
       if (activeNote) {
         const refreshed = data.data.find((n) => n.id === activeNote.id);
         if (refreshed) setActiveNote(refreshed);
@@ -45,7 +42,6 @@ export default function App() {
 
   useEffect(() => { fetchNotes(); }, [fetchNotes]);
 
-  // ── Create ──────────────────────────────────────────────────────────────────
   const handleCreate = async () => {
     try {
       const { data } = await createNote({ title: 'Untitled', content: '', tags: [] });
@@ -57,7 +53,6 @@ export default function App() {
     }
   };
 
-  // ── Save / auto-save ────────────────────────────────────────────────────────
   const handleSave = useCallback(async (updates) => {
     if (!activeNote) return;
     setSaving(true);
@@ -72,7 +67,6 @@ export default function App() {
     }
   }, [activeNote]);
 
-  // ── Delete ──────────────────────────────────────────────────────────────────
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Delete this note? This cannot be undone.');
     if (!confirmed) return;
@@ -93,7 +87,6 @@ export default function App() {
         toastOptions={{ style: { fontSize: '13px' } }}
       />
 
-      {/* ── Sidebar ─────────────────────────────────────────────────────────── */}
       <div className="sidebar">
         <header className="sidebar-header">
           <div className="brand">
@@ -128,7 +121,6 @@ export default function App() {
         />
       </div>
 
-      {/* ── Main editor area ─────────────────────────────────────────────────── */}
       <main className="editor-area">
         <NoteEditor
           key={activeNote?.id}

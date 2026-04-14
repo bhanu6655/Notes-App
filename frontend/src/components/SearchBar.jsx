@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 export default function SearchBar({ value, onChange, onClear }) {
   const inputRef = useRef(null);
 
-  // ⌘K / Ctrl+K focuses the search bar
   useEffect(() => {
     const handler = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {

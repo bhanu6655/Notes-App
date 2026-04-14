@@ -12,7 +12,6 @@ export default function MarkdownPreview({ content }) {
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeSanitize, rehypeHighlight]}
           components={{
-            // Open all links in a new tab safely
             a: ({ href, children }) => (
               <a href={href} target="_blank" rel="noopener noreferrer">
                 {children}
